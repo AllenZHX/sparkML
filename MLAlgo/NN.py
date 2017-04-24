@@ -1,0 +1,24 @@
+from pyspark.ml.classification import MultilayerPerceptronClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.sql import SQLContext
+from pyspark import SparkContext
+
+sc = SparkContext(appName="NNExample")
+sqlContext = SQLContext(sc)
+data = sqlContext.read.format("libsvm").load("data/mllib/sample_multiclass_classification_data.txt")
+#for yarn-cluster mode
+#data = sqlContext.read.format("libsvm").load("MLData/data/mllib/sample_multiclass_classification_data.txt")
+splits = data.randomSplit([0.6,0.4],1234)
+train = splits[0]
+test = splits[1]
+
+layers = [4,5,4,3] #input layer 4; two hidden layers 5 & 4; output layer 3
+
+trainer = MultilayerPerceptronClassifier(maxIter=100, layers=layers, blockSize=128, seed=1234)
+
+model = trainer.fit(train)
+
+result = model.transform(test)
+predictionAndLabels = result.select("prediction", "label")
+evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
+print("Test accuracy = " + str(evaluator.evaluate(predictionAndLabels)))
