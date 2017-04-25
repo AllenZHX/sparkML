@@ -5,9 +5,9 @@ from pyspark import SparkContext
 
 sc = SparkContext(appName="NNExample")
 sqlContext = SQLContext(sc)
-data = sqlContext.read.format("libsvm").load("data/mllib/sample_multiclass_classification_data.txt")
+#data = sqlContext.read.format("libsvm").load("data/mllib/sample_multiclass_classification_data.txt")
 #for yarn-cluster mode
-#data = sqlContext.read.format("libsvm").load("MLData/data/mllib/sample_multiclass_classification_data.txt")
+data = sqlContext.read.format("libsvm").load("MLData/data/mllib/sample_multiclass_classification_data.txt")
 splits = data.randomSplit([0.6,0.4],1234)
 train = splits[0]
 test = splits[1]

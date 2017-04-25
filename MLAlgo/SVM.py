@@ -7,7 +7,8 @@ def parsePoint(line):
 	return LabeledPoint(values[0], values[1:])
 
 sc = SparkContext(appName="PythonSVMExample")
-data = sc.textFile("data/mllib/sample_svm_data.txt")
+#data = sc.textFile("data/mllib/sample_svm_data.txt")
+data = sc.textFile("MLData/data/mllib/sample_svm_data.txt")
 parsedData = data.map(parsePoint)
 
 model = SVMWithSGD.train(parsedData, iterations=10000)
